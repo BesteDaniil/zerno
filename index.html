@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Зерно — кофейня на обжарке</title>
+  <meta name="description" content="Кофейня «Зерно» — свежая обжарка, авторские напитки и уютная атмосфера. Эспрессо, капучино, раф, латте, фильтр и домашняя выпечка каждый день." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== Шапка ===== -->
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a href="#top" class="logo" aria-label="Зерно — на главную">
+        <span class="logo__bean" aria-hidden="true"></span>
+        Зерно
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#about">О нас</a>
+        <a href="#menu">Меню</a>
+        <a href="#contacts">Контакты</a>
+        <a href="#menu" class="nav__cta">Заказать</a>
+      </nav>
+
+      <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Первый экран ===== -->
+    <section class="hero" id="hero">
+      <div class="hero__overlay"></div>
+      <div class="container hero__content reveal">
+        <p class="hero__kicker">Кофейня на свежей обжарке</p>
+        <h1 class="hero__title">Кофе, ради которого <br />хочется просыпаться</h1>
+        <p class="hero__text">Обжариваем зерно сами, варим бережно и подаём с теплом. Заходите на чашку — станет уютнее.</p>
+        <div class="hero__actions">
+          <a href="#menu" class="btn btn--primary">Посмотреть меню</a>
+          <a href="#about" class="btn btn--ghost">Узнать о нас</a>
+        </div>
+      </div>
+      <a href="#about" class="hero__scroll" aria-label="Прокрутить вниз">↓</a>
+    </section>
+
+    <!-- ===== О нас ===== -->
+    <section class="about section" id="about">
+      <div class="container about__grid">
+        <div class="about__media reveal">
+          <img
+            src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80"
+            alt="Чашка капучино с латте-артом на деревянном столе"
+            loading="lazy" width="1000" height="1250" />
+        </div>
+        <div class="about__text reveal">
+          <p class="eyebrow">О нас</p>
+          <h2 class="section__title">Небольшая кофейня <br />с большой любовью к зерну</h2>
+          <p>«Зерно» началось с простой идеи: хороший кофе не должен быть сложным. Мы сами выбираем зёрна у проверенных фермеров, обжариваем небольшими партиями и завариваем так, чтобы раскрыть характер каждого сорта.</p>
+          <p>У нас нет конвейера и спешки. Бариста помнят завсегдатаев по именам и по любимому напитку, а к кофе всегда найдётся тёплый круассан из утренней выпечки.</p>
+          <p>Приходите поработать, встретиться с друзьями или просто помолчать над чашкой — двери «Зерна» открыты для каждого.</p>
+
+          <div class="about__stats">
+            <div class="stat">
+              <span class="stat__num">7</span>
+              <span class="stat__label">лет варим кофе</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num">100%</span>
+              <span class="stat__label">своя обжарка</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num">12</span>
+              <span class="stat__label">сортов зерна</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Меню ===== -->
+    <section class="menu section" id="menu">
+      <div class="container">
+        <div class="section__head reveal">
+          <p class="eyebrow">Меню</p>
+          <h2 class="section__title">Что налить сегодня?</h2>
+          <p class="section__lead">Классика и авторские напитки на свежеобжаренном зерне. Цены — за стандартную порцию.</p>
+        </div>
+
+        <div class="menu__grid">
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">☕</div>
+            <div class="card__body">
+              <h3 class="card__name">Эспрессо</h3>
+              <p class="card__desc">Плотный насыщенный шот — концентрированный вкус свежего зерна.</p>
+            </div>
+            <div class="card__price">150&nbsp;₽</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">☕</div>
+            <div class="card__body">
+              <h3 class="card__name">Капучино</h3>
+              <p class="card__desc">Эспрессо и бархатистое молоко с нежной плотной пенкой.</p>
+            </div>
+            <div class="card__price">220&nbsp;₽</div>
+          </article>
+
+          <article class="card card--accent reveal">
+            <div class="card__icon" aria-hidden="true">✨</div>
+            <div class="card__body">
+              <h3 class="card__name">Раф <span class="card__tag">хит</span></h3>
+              <p class="card__desc">Сливочный, чуть сладкий — наш фирменный напиток для уюта.</p>
+            </div>
+            <div class="card__price">280&nbsp;₽</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">🥛</div>
+            <div class="card__body">
+              <h3 class="card__name">Латте</h3>
+              <p class="card__desc">Мягкий вкус и много тёплого молока — самый ласковый кофе.</p>
+            </div>
+            <div class="card__price">240&nbsp;₽</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">🫖</div>
+            <div class="card__body">
+              <h3 class="card__name">Фильтр</h3>
+              <p class="card__desc">Чистый вкус зерна, раскрытый альтернативным завариванием.</p>
+            </div>
+            <div class="card__price">200&nbsp;₽</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">🥐</div>
+            <div class="card__body">
+              <h3 class="card__name">Круассан</h3>
+              <p class="card__desc">Свежая выпечка каждое утро — идеальная пара к вашему кофе.</p>
+            </div>
+            <div class="card__price">180&nbsp;₽</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Контакты ===== -->
+    <section class="contacts section" id="contacts">
+      <div class="container contacts__grid">
+        <div class="contacts__info reveal">
+          <p class="eyebrow">Контакты</p>
+          <h2 class="section__title">Заходите на чашку</h2>
+
+          <ul class="contacts__list">
+            <li>
+              <span class="contacts__label">Адрес</span>
+              <span class="contacts__value">г. Москва, ул. Кофейная, 12<br />(вход со двора)</span>
+            </li>
+            <li>
+              <span class="contacts__label">Часы работы</span>
+              <span class="contacts__value">Пн–Пт&nbsp;— 8:00–22:00<br />Сб–Вс&nbsp;— 9:00–23:00</span>
+            </li>
+            <li>
+              <span class="contacts__label">Телефон</span>
+              <span class="contacts__value"><a href="tel:+79991234567">+7 (999) 123-45-67</a></span>
+            </li>
+          </ul>
+
+          <div class="socials" aria-label="Соцсети">
+            <a href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+            <a href="#" target="_blank" rel="noopener" aria-label="Telegram">Telegram</a>
+            <a href="#" target="_blank" rel="noopener" aria-label="ВКонтакте">ВКонтакте</a>
+          </div>
+        </div>
+
+        <div class="contacts__card reveal">
+          <h3>Забронировать столик</h3>
+          <p>Хотите тихий уголок к определённому времени? Позвоните нам или напишите в мессенджерах — придержим место.</p>
+          <a href="tel:+79991234567" class="btn btn--primary">Позвонить</a>
+          <p class="contacts__note">Обычно отвечаем в течение пары минут в рабочие часы.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Подвал ===== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="#top" class="logo logo--light">
+        <span class="logo__bean" aria-hidden="true"></span>
+        Зерно
+      </a>
+      <nav class="footer__nav">
+        <a href="#about">О нас</a>
+        <a href="#menu">Меню</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Кофейня «Зерно». Сварено с любовью.</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
