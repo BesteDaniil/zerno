@@ -6,6 +6,22 @@
   <title>Зерно — кофейня на обжарке</title>
   <meta name="description" content="Кофейня «Зерно» — свежая обжарка, авторские напитки и уютная атмосфера. Эспрессо, капучино, раф, латте, фильтр и домашняя выпечка каждый день." />
 
+  <!-- Open Graph / соцсети -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Зерно" />
+  <meta property="og:title" content="Зерно — кофейня на свежей обжарке" />
+  <meta property="og:description" content="Свежая обжарка, авторские напитки и уютная атмосфера. Эспрессо, капучино, раф, латте, фильтр и домашняя выпечка каждый день." />
+  <meta property="og:url" content="https://bestedaniil.github.io/zerno/" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&h=630&q=80" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Две чашки кофе с латте-артом в кофейне «Зерно»" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Зерно — кофейня на свежей обжарке" />
+  <meta name="twitter:description" content="Свежая обжарка, авторские напитки и уютная атмосфера." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&h=630&q=80" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -26,7 +42,7 @@
         <a href="#about">О нас</a>
         <a href="#menu">Меню</a>
         <a href="#contacts">Контакты</a>
-        <a href="#menu" class="nav__cta">Заказать</a>
+        <a href="tel:+79991234567" class="nav__cta">Заказать</a>
       </nav>
 
       <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
@@ -96,7 +112,9 @@
 
         <div class="menu__grid">
           <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">☕</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Эспрессо</h3>
               <p class="card__desc">Плотный насыщенный шот — концентрированный вкус свежего зерна.</p>
@@ -105,7 +123,9 @@
           </article>
 
           <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">☕</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Капучино</h3>
               <p class="card__desc">Эспрессо и бархатистое молоко с нежной плотной пенкой.</p>
@@ -114,7 +134,9 @@
           </article>
 
           <article class="card card--accent reveal">
-            <div class="card__icon" aria-hidden="true">✨</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Раф <span class="card__tag">хит</span></h3>
               <p class="card__desc">Сливочный, чуть сладкий — наш фирменный напиток для уюта.</p>
@@ -123,7 +145,9 @@
           </article>
 
           <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">🥛</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8"/><path d="M9 2v2.789a4 4 0 0 1-.672 2.219l-.656.984A4 4 0 0 0 7 10.212V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.789a4 4 0 0 0-.672-2.219l-.656-.984A4 4 0 0 1 15 4.788V2"/><path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Латте</h3>
               <p class="card__desc">Мягкий вкус и много тёплого молока — самый ласковый кофе.</p>
@@ -132,7 +156,9 @@
           </article>
 
           <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">🫖</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Фильтр</h3>
               <p class="card__desc">Чистый вкус зерна, раскрытый альтернативным завариванием.</p>
@@ -141,7 +167,9 @@
           </article>
 
           <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">🥐</div>
+            <div class="card__icon" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.6 13.11 5.79-3.21c1.89-1.05 4.79 1.78 3.71 3.71l-3.22 5.81C8.8 23.16.79 15.11 4.6 13.11Z"/><path d="m10.5 9.5-1-2.29C9.2 6.48 8.8 6 8 6H4.5C2.79 6 2 6.5 2 8.5a7.71 7.71 0 0 0 2 4.83"/><path d="M8 6c0-1.55.24-4-2-4-2 0-2.5 2.17-2.5 4"/><path d="m14.5 13.5 2.29 1c.73.3 1.21.7 1.21 1.5v3.5c0 1.71-.5 2.5-2.5 2.5a7.71 7.71 0 0 1-4.83-2"/><path d="M18 16c1.55 0 4-.24 4 2 0 2-2.17 2.5-4 2.5"/></svg>
+            </div>
             <div class="card__body">
               <h3 class="card__name">Круассан</h3>
               <p class="card__desc">Свежая выпечка каждое утро — идеальная пара к вашему кофе.</p>
@@ -175,9 +203,18 @@
           </ul>
 
           <div class="socials" aria-label="Соцсети">
-            <a href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-            <a href="#" target="_blank" rel="noopener" aria-label="Telegram">Telegram</a>
-            <a href="#" target="_blank" rel="noopener" aria-label="ВКонтакте">ВКонтакте</a>
+            <a href="https://t.me/zerno_coffee" target="_blank" rel="noopener noreferrer" aria-label="Telegram кофейни Зерно">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
+              <span>Telegram</span>
+            </a>
+            <a href="https://vk.com/zerno_coffee" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте кофейни Зерно">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.162 18.994c.609 0 .858-.406.851-.915-.031-1.917.714-2.949 2.059-1.604 1.488 1.488 1.796 2.519 3.603 2.519h3.2c.808 0 1.126-.26 1.126-.668 0-.863-1.421-2.386-2.662-3.539-1.298-1.203-1.396-1.283-.32-2.658 1.809-2.311 4.024-5.428 1.986-5.428h-3.203c-.855 0-.987.535-1.35 1.35-.696 1.556-1.847 3.703-2.319 3.703-.472 0-.462-1.83-.462-3.099 0-1.315-.02-1.954-.85-1.954h-4.87c-.4 0-.664.22-.664.583 0 .784 1.174.784 1.174 2.895v3.395c0 1.315-.098 1.591-.599 1.591-1.174 0-3.323-3.037-4.51-6.596-.263-.797-.428-1.868-1.19-1.868H1.322c-.4 0-.664.22-.664.583 0 .916 1.174 4.395 4.44 8.5 2.176 2.735 5.242 4.215 8.03 4.215z"/></svg>
+              <span>ВКонтакте</span>
+            </a>
+            <a href="https://instagram.com/zerno_coffee" target="_blank" rel="noopener noreferrer" aria-label="Instagram кофейни Зерно">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              <span>Instagram</span>
+            </a>
           </div>
         </div>
 

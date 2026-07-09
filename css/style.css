@@ -165,9 +165,11 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; 
 .card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--caramel); }
 .card__icon {
   flex: none; width: 54px; height: 54px; border-radius: 14px;
-  display: grid; place-items: center; font-size: 26px;
+  display: grid; place-items: center; color: var(--coffee);
   background: var(--sand); border: 1px solid var(--tan);
 }
+.card__icon .ico { width: 26px; height: 26px; }
+.card--accent .card__icon { color: var(--caramel); background: #f6e9d5; }
 .card__body { flex: 1; }
 .card__name { font-size: 21px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
 .card__desc { font-size: 14px; color: var(--muted); line-height: 1.45; }
@@ -190,10 +192,12 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; 
 
 .socials { display: flex; flex-wrap: wrap; gap: 12px; }
 .socials a {
-  padding: 10px 20px; border-radius: 999px; border: 1.5px solid var(--tan);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--tan);
   font-weight: 600; font-size: 15px; color: var(--brown);
   transition: .25s var(--ease);
 }
+.socials a svg { width: 18px; height: 18px; flex: none; }
 .socials a:hover { background: var(--coffee); color: var(--cream); border-color: var(--coffee); transform: translateY(-2px); }
 
 .contacts__card {
