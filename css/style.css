@@ -363,8 +363,8 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; 
 
 /* ===== Демо-уведомление (toast) ===== */
 .toast {
-  position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 24px);
-  z-index: 200; width: min(92vw, 430px);
+  position: fixed; left: 16px; right: 16px; bottom: 28px; margin: 0 auto; transform: translateY(24px);
+  z-index: 200; max-width: 430px;
   display: flex; align-items: center; gap: 13px;
   background: var(--espresso); color: var(--cream);
   padding: 15px 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,.1);
@@ -373,7 +373,7 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; 
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity .35s var(--ease), transform .35s var(--ease), visibility .35s;
 }
-.toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.toast.show { opacity: 1; visibility: visible; transform: translateY(0); }
 .toast__icon { flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(200,160,95,.16); color: var(--caramel); }
 .toast__icon svg { width: 22px; height: 22px; }
 .toast b { color: var(--caramel); font-weight: 700; }
