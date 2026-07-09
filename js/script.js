@@ -62,7 +62,7 @@
     var hideTimer = null;
     var infoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
 
-    var showToast = function (name) {
+    var showToast = function (messageHtml) {
       if (!toast) {
         toast = document.createElement('div');
         toast.className = 'toast';
@@ -70,21 +70,23 @@
         toast.setAttribute('aria-live', 'polite');
         document.body.appendChild(toast);
       }
-      toast.innerHTML =
-        '<span class="toast__icon">' + infoIcon + '</span>' +
-        '<span>Это <b>демо-сайт</b> для портфолио — «' + name + '» здесь условный. ' +
-        'В реальном проекте тут будет живая ссылка ☕</span>';
+      toast.innerHTML = '<span class="toast__icon">' + infoIcon + '</span><span>' + messageHtml + '</span>';
       // reflow, чтобы анимация сработала при повторном клике
       void toast.offsetWidth;
       toast.classList.add('show');
       clearTimeout(hideTimer);
-      hideTimer = setTimeout(function () { toast.classList.remove('show'); }, 4000);
+      hideTimer = setTimeout(function () { toast.classList.remove('show'); }, 4200);
     };
 
     demoLinks.forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        showToast(link.getAttribute('data-demo') || 'Соцсеть');
+        var href = link.getAttribute('href') || '';
+        var name = link.getAttribute('data-demo') || 'Ссылка';
+        var msg = href.indexOf('tel:') === 0
+          ? 'Это <b>демо-сайт</b> для портфолио — телефон вымышленный, заказ и звонок не сработают. В реальном проекте здесь будет настоящий номер ☕'
+          : 'Это <b>демо-сайт</b> для портфолио — «' + name + '» здесь условный. В реальном проекте тут будет живая ссылка ☕';
+        showToast(msg);
       });
     });
   }
