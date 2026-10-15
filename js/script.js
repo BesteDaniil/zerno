@@ -327,13 +327,13 @@
     showStep('cart'); renderAll();
     cartEl.classList.add('open');
     cartEl.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden'; document.documentElement.classList.add('is-locked');
+    document.documentElement.classList.add('is-locked');
     setTimeout(function () { var cl = cartEl.querySelector('.cart__close'); if (cl) cl.focus(); }, 60);
   }
   function closeCart() {
     cartEl.classList.remove('open');
     cartEl.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = ''; document.documentElement.classList.remove('is-locked');
+    document.documentElement.classList.remove('is-locked');
     cartBtn.focus();
   }
 
