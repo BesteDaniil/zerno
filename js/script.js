@@ -9,14 +9,20 @@
   /* ---- Мобильное меню (бургер) ---- */
   var burger = document.getElementById('burger');
   var nav = document.getElementById('nav');
+  var header = document.querySelector('.header');
+  var root = document.documentElement;
 
   if (burger && nav) {
+    // Меню — оверлей на весь экран; пока оно открыто, страница не прокручивается
     var toggleMenu = function (open) {
       var isOpen = open === undefined ? !nav.classList.contains('open') : open;
+      if (isOpen === nav.classList.contains('open')) return;
       nav.classList.toggle('open', isOpen);
       burger.classList.toggle('open', isOpen);
+      if (header) header.classList.toggle('menu-open', isOpen);
       burger.setAttribute('aria-expanded', String(isOpen));
-      document.body.style.overflow = isOpen ? 'hidden' : '';
+      burger.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+      root.classList.toggle('is-locked', isOpen);
     };
 
     burger.addEventListener('click', function () { toggleMenu(); });
@@ -26,29 +32,137 @@
       link.addEventListener('click', function () { toggleMenu(false); });
     });
 
-    // Закрываем по Esc
+    // Закрываем по Esc и возвращаем фокус на бургер
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') toggleMenu(false);
+      if (e.key === 'Escape' && nav.classList.contains('open')) {
+        toggleMenu(false);
+        burger.focus();
+      }
     });
+
+    // Корзина открывается поверх — меню закрываем
+    ['cartBtn', 'orderBtn'].forEach(function (id) {
+      var btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', function () { toggleMenu(false); });
+    });
+
+    // Выросли до десктопа — оверлей больше не нужен
+    if (window.matchMedia) {
+      var desktop = window.matchMedia('(min-width: 901px)');
+      var onDesktop = function (e) { if (e.matches) toggleMenu(false); };
+      if (desktop.addEventListener) desktop.addEventListener('change', onDesktop);
+      else if (desktop.addListener) desktop.addListener(onDesktop);
+    }
   }
 
   /* ---- Плавное появление секций при скролле ---- */
-  var revealItems = document.querySelectorAll('.reveal');
+  var revealItems = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  var revealObserver = null;
+
+  function showReveal(el) {
+    el.classList.add('is-visible');
+    if (revealObserver) revealObserver.unobserve(el);
+  }
 
   if ('IntersectionObserver' in window && revealItems.length) {
-    var observer = new IntersectionObserver(function (entries, obs) {
+    // Срабатываем заранее: нижняя граница области видимости сдвинута на 15% вниз
+    revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) showReveal(entry.target);
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 15% 0px' });
 
-    revealItems.forEach(function (el) { observer.observe(el); });
+    revealItems.forEach(function (el) { revealObserver.observe(el); });
+
+    // Страховка: при быстрой прокрутке или переходе по якорю показываем всё,
+    // что уже выше нижнего края экрана — «пустого экрана» быть не должно
+    var revealTick = false;
+    var revealSweep = function () {
+      revealTick = false;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      revealItems = revealItems.filter(function (el) {
+        if (el.classList.contains('is-visible')) return false;
+        if (el.getBoundingClientRect().top < vh) { showReveal(el); return false; }
+        return true;
+      });
+    };
+    var requestSweep = function () {
+      if (!revealTick) { revealTick = true; window.requestAnimationFrame(revealSweep); }
+    };
+    window.addEventListener('scroll', requestSweep, { passive: true });
+    window.addEventListener('resize', requestSweep);
+    window.addEventListener('load', requestSweep);
   } else {
     // Фолбэк: если IntersectionObserver недоступен — просто показываем всё
     revealItems.forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  /* ---- Вкладки категорий меню ---- */
+  var tabsBar = document.getElementById('menuTabs');
+  if (tabsBar) {
+    var chips = Array.prototype.slice.call(tabsBar.querySelectorAll('.chip'));
+    var tabsInner = tabsBar.querySelector('.menu__tabs-inner');
+    var cats = [];
+    chips.forEach(function (chip) {
+      var target = document.getElementById((chip.getAttribute('href') || '').slice(1));
+      if (target) cats.push({ chip: chip, el: target });
+    });
+
+    var currentChip = null;
+    var holdUntil = 0; // после клика по чипсу не даём прокрутке перебивать выбор
+    var setActive = function (chip) {
+      if (chip === currentChip) return;
+      currentChip = chip;
+      chips.forEach(function (c) {
+        var on = c === chip;
+        c.classList.toggle('is-active', on);
+        if (on) c.setAttribute('aria-current', 'true'); else c.removeAttribute('aria-current');
+      });
+      // На узких экранах доводим активный чипс до центра полоски (только по горизонтали)
+      if (chip && tabsInner && tabsInner.scrollWidth > tabsInner.clientWidth) {
+        tabsInner.scrollTo({ left: chip.offsetLeft - (tabsInner.clientWidth - chip.offsetWidth) / 2, behavior: 'smooth' });
+      }
+    };
+
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        holdUntil = Date.now() + 900;
+        setActive(chip);
+      });
+    });
+
+    if ('IntersectionObserver' in window && cats.length) {
+      var visibleCats = [];
+      var catObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var i = visibleCats.indexOf(entry.target);
+          if (entry.isIntersecting && i === -1) visibleCats.push(entry.target);
+          if (!entry.isIntersecting && i !== -1) visibleCats.splice(i, 1);
+          // Прокрутили выше меню — подсветку снимаем
+          if (!entry.isIntersecting && entry.target === cats[0].el && entry.boundingClientRect.top > 0) setActive(null);
+        });
+        if (Date.now() < holdUntil || !visibleCats.length) return;
+        // Из попавших в «рабочую полосу» берём самую нижнюю по порядку на странице
+        var pick = null;
+        cats.forEach(function (c) { if (visibleCats.indexOf(c.el) !== -1) pick = c; });
+        if (pick) setActive(pick.chip);
+      }, { rootMargin: '-160px 0px -50% 0px', threshold: 0 });
+      cats.forEach(function (c) { catObserver.observe(c.el); });
+    }
+
+    // Тень и граница у полоски, когда она «прилипла» под шапкой
+    var stickTick = false;
+    var updateStuck = function () {
+      stickTick = false;
+      var stuck = tabsBar.getBoundingClientRect().top <= 73;
+      tabsBar.classList.toggle('is-stuck', stuck);
+      // Рывок наверх (логотип, якорь) наблюдатель может не заметить — сбрасываем подсветку сами
+      if (cats.length && Date.now() >= holdUntil && cats[0].el.getBoundingClientRect().top > window.innerHeight / 2) setActive(null);
+    };
+    window.addEventListener('scroll', function () {
+      if (!stickTick) { stickTick = true; window.requestAnimationFrame(updateStuck); }
+    }, { passive: true });
+    updateStuck();
   }
 
   /* ---- Год в подвале ---- */
@@ -213,13 +327,13 @@
     showStep('cart'); renderAll();
     cartEl.classList.add('open');
     cartEl.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'; document.documentElement.classList.add('is-locked');
     setTimeout(function () { var cl = cartEl.querySelector('.cart__close'); if (cl) cl.focus(); }, 60);
   }
   function closeCart() {
     cartEl.classList.remove('open');
     cartEl.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    document.body.style.overflow = ''; document.documentElement.classList.remove('is-locked');
     cartBtn.focus();
   }
 

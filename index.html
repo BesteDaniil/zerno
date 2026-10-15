@@ -26,7 +26,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <script>document.documentElement.className += ' js';</script>
+  <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body>
 
@@ -70,7 +71,9 @@
           <a href="#about" class="btn btn--ghost">Узнать о нас</a>
         </div>
       </div>
-      <a href="#about" class="hero__scroll" aria-label="Прокрутить вниз">↓</a>
+      <a href="#about" class="hero__scroll" aria-label="Прокрутить вниз">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </a>
     </section>
 
     <!-- ===== О нас ===== -->
@@ -115,9 +118,22 @@
           <h2 class="section__title">Что налить сегодня?</h2>
           <p class="section__lead">Классика и авторские напитки на свежеобжаренном зерне, к ним — домашняя выпечка. Цены — за стандартную порцию.</p>
         </div>
+      </div>
 
+      <!-- Вкладки категорий (прилипают под шапкой) -->
+      <div class="menu__tabs" id="menuTabs">
+        <div class="container">
+          <nav class="menu__tabs-inner" aria-label="Категории меню">
+            <a href="#cat-coffee" class="chip">Кофе</a>
+            <a href="#cat-notcoffee" class="chip">Не кофе</a>
+            <a href="#cat-bakery" class="chip">Выпечка</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="container">
         <!-- Кофе -->
-        <div class="menu__cat reveal">
+        <div class="menu__cat reveal" id="cat-coffee">
           <h3 class="menu__cat-title">Кофе</h3>
           <div class="menu__grid">
 
@@ -237,7 +253,7 @@
         </div>
 
         <!-- Не кофе -->
-        <div class="menu__cat reveal">
+        <div class="menu__cat reveal" id="cat-notcoffee">
           <h3 class="menu__cat-title">Не кофе</h3>
           <div class="menu__grid">
 
@@ -287,7 +303,7 @@
         </div>
 
         <!-- Выпечка -->
-        <div class="menu__cat reveal">
+        <div class="menu__cat reveal" id="cat-bakery">
           <h3 class="menu__cat-title">Выпечка</h3>
           <div class="menu__grid">
 
@@ -484,6 +500,6 @@
     </aside>
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="js/script.js?v=3"></script>
 </body>
 </html>
