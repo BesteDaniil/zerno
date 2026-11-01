@@ -36,7 +36,7 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && nav.classList.contains('open')) {
         toggleMenu(false);
-        burger.focus();
+        burger.focus({ preventScroll: true });
       }
     });
 
@@ -334,7 +334,8 @@
     cartEl.classList.remove('open');
     cartEl.setAttribute('aria-hidden', 'true');
     document.documentElement.classList.remove('is-locked');
-    cartBtn.focus();
+    // preventScroll: иначе браузер подкручивает страницу к кнопке корзины
+    cartBtn.focus({ preventScroll: true });
   }
 
   cartBtn.addEventListener('click', openCart);
@@ -368,25 +369,215 @@
     })(addBtns[a]);
   }
 
-  function setError(input, show) {
+  /* ===== Маска телефона ===== */
+  // Формат +7 (999) 123-45-67. «Национальные» цифры — 10 цифр после +7.
+  var PREFIX = '+7 (';
+  var NATIONAL_LENGTH = 10;
+
+  // Цифры номера без кода страны (ввод с 8, 7, +7). Ведущая 7/8 — код страны, только если
+  // строка начинается с «+7» или «7 (» / «8 (», номер набран целиком (11 цифр) или это первая цифра
+  function extractPhoneDigits(raw) {
+    var text = String(raw);
+    var digits = text.replace(/\D/g, '');
+    var startsWithCode = /^\s*(\+\s*7|[78]\s*\()/.test(text);
+    var looksLikeCode = digits.length > 0 && (digits.charAt(0) === '7' || digits.charAt(0) === '8') &&
+      (digits.length === 1 || digits.length > NATIONAL_LENGTH);
+    var hasCountryCode = startsWithCode || looksLikeCode;
+    if (hasCountryCode) digits = digits.slice(1);
+    return { digits: digits.slice(0, NATIONAL_LENGTH), hasCountryCode: hasCountryCode };
+  }
+
+  // Разделители появляются только перед следующей цифрой — в конце строки не висит «) » или «-»
+  function formatPhone(digits) {
+    if (digits.length === 0) return '';
+    var result = PREFIX + digits.slice(0, 3);
+    if (digits.length > 3) result += ') ' + digits.slice(3, 6);
+    if (digits.length > 6) result += '-' + digits.slice(6, 8);
+    if (digits.length > 8) result += '-' + digits.slice(8, 10);
+    return result;
+  }
+
+  // Позиция курсора сразу после N-й национальной цифры отформатированной строки
+  function caretAfterDigit(formatted, digitCount) {
+    if (digitCount <= 0) return formatted.length === 0 ? 0 : PREFIX.length;
+    var seen = 0;
+    for (var i = PREFIX.length; i < formatted.length; i++) {
+      if (/\d/.test(formatted.charAt(i))) {
+        seen++;
+        if (seen === digitCount) return i + 1;
+      }
+    }
+    return formatted.length;
+  }
+
+  // Сколько национальных цифр стоит левее позиции в отформатированной строке
+  function nationalDigitsBefore(formatted, position) {
+    var n = 0;
+    for (var i = PREFIX.length; i < Math.min(position, formatted.length); i++) {
+      if (/\d/.test(formatted.charAt(i))) n++;
+    }
+    return n;
+  }
+
+  // Обычный ввод: сырое значение поля + позиция курсора → маска + новый курсор
+  function maskPhoneInput(raw, caret) {
+    raw = String(raw);
+    // Набрали перед «+7 (» (курсор в начале) — переносим набранное за префикс
+    var prefixIndex = raw.indexOf(PREFIX);
+    if (prefixIndex > 0) {
+      var typed = raw.slice(0, prefixIndex);
+      raw = PREFIX + typed + raw.slice(prefixIndex + PREFIX.length);
+      caret = PREFIX.length + typed.length;
+    }
+    var parsed = extractPhoneDigits(raw);
+    // Поле уже начинается с «+7 (», а человек набирает 8 или 7 — это код страны, а не цифра номера
+    if (parsed.hasCountryCode && (parsed.digits === '7' || parsed.digits === '8')) parsed.digits = '';
+    var value = parsed.digits.length === 0 && parsed.hasCountryCode ? PREFIX : formatPhone(parsed.digits);
+    var digitsBeforeCaret = raw.slice(0, caret).replace(/\D/g, '').length;
+    if (parsed.hasCountryCode) digitsBeforeCaret--;
+    digitsBeforeCaret = Math.max(0, Math.min(digitsBeforeCaret, parsed.digits.length));
+    return { value: value, caret: caretAfterDigit(value, digitsBeforeCaret) };
+  }
+
+  // Вставка: целый номер (8…, 7…, +7…, 9…) заменяет поле, кусок цифр — вставляется в позицию
+  function maskPhonePaste(current, selectionStart, selectionEnd, pasted) {
+    var pastedDigits = String(pasted).replace(/\D/g, '');
+    if (pastedDigits.length >= NATIONAL_LENGTH) {
+      var value = formatPhone(extractPhoneDigits(pasted).digits);
+      return { value: value, caret: value.length };
+    }
+    var raw = String(current).slice(0, selectionStart) + pastedDigits + String(current).slice(selectionEnd);
+    return maskPhoneInput(raw, selectionStart + pastedDigits.length);
+  }
+
+  // Backspace: стирает ближайшую цифру слева, даже если слева «) », «-» или пробел
+  function deleteDigitBefore(formatted, caret) {
+    var digits = extractPhoneDigits(formatted).digits;
+    var before = nationalDigitsBefore(formatted, caret);
+    if (before === 0) {
+      // Слева только «+7 (» — стирать нечего; если цифр нет совсем, очищаем поле
+      return digits.length === 0 ? { value: '', caret: 0 } : { value: formatted, caret: PREFIX.length };
+    }
+    var value = formatPhone(digits.slice(0, before - 1) + digits.slice(before));
+    return { value: value, caret: caretAfterDigit(value, before - 1) };
+  }
+
+  // Delete: стирает ближайшую цифру справа от курсора
+  function deleteDigitAfter(formatted, caret) {
+    var digits = extractPhoneDigits(formatted).digits;
+    var before = nationalDigitsBefore(formatted, caret);
+    if (before >= digits.length) return { value: formatted, caret: caret };
+    var value = formatPhone(digits.slice(0, before) + digits.slice(before + 1));
+    return { value: value, caret: caretAfterDigit(value, before) };
+  }
+
+  // DOM-обвязка маски
+  function attachPhoneMask(input) {
+    if (!input) return;
+    var valueBefore = '';
+    var caretBefore = 0;
+
+    function apply(result) {
+      input.value = result.value;
+      if (document.activeElement === input) input.setSelectionRange(result.caret, result.caret);
+      // Ошибка гаснет по событию input; после программной записи значения сообщаем об изменении сами
+      if (input.classList.contains('invalid')) setError(input, false);
+    }
+
+    // Курсор не пускаем внутрь «+7 (» — иначе цифра встанет перед кодом страны
+    function keepCaretAfterPrefix() {
+      if (input.value.indexOf(PREFIX) === 0 && input.selectionStart < PREFIX.length && input.selectionStart === input.selectionEnd) {
+        input.setSelectionRange(PREFIX.length, PREFIX.length);
+      }
+    }
+
+    // Удаление перехватываем до браузера: иначе Backspace по «) » или «-» стирает разделитель,
+    // маска возвращает его — и курсор «застревает»
+    input.addEventListener('beforeinput', function (event) {
+      valueBefore = input.value;
+      caretBefore = input.selectionStart;
+      var isBackward = event.inputType === 'deleteContentBackward';
+      var isForward = event.inputType === 'deleteContentForward';
+      if (!isBackward && !isForward) return;
+      if (!event.cancelable || input.selectionStart !== input.selectionEnd) return;
+      event.preventDefault();
+      apply(isBackward ? deleteDigitBefore(input.value, caretBefore) : deleteDigitAfter(input.value, caretBefore));
+    });
+
+    input.addEventListener('paste', function (event) {
+      var text = event.clipboardData ? event.clipboardData.getData('text') : '';
+      if (!text) return;
+      event.preventDefault();
+      apply(maskPhonePaste(input.value, input.selectionStart, input.selectionEnd, text));
+    });
+
+    input.addEventListener('input', function (event) {
+      // Страховка для клавиатур, где beforeinput нельзя отменить (часть Android IME):
+      // браузер стёр только разделитель — стираем цифру сами
+      var deletedBackward = event.inputType === 'deleteContentBackward';
+      if (deletedBackward && valueBefore && extractPhoneDigits(input.value).digits === extractPhoneDigits(valueBefore).digits) {
+        apply(deleteDigitBefore(valueBefore, caretBefore));
+        return;
+      }
+      apply(maskPhoneInput(input.value, input.selectionStart));
+    });
+
+    input.addEventListener('focus', function () {
+      if (input.value === '') input.value = PREFIX;
+      window.requestAnimationFrame(function () {
+        if (input.value === PREFIX) input.setSelectionRange(PREFIX.length, PREFIX.length);
+        keepCaretAfterPrefix();
+      });
+    });
+    input.addEventListener('click', keepCaretAfterPrefix);
+    input.addEventListener('keyup', keepCaretAfterPrefix);
+
+    input.addEventListener('blur', function () {
+      if (input.value === PREFIX) input.value = '';
+    });
+  }
+
+  /* ===== Проверка формы ===== */
+  // Каждая функция возвращает текст ошибки или пустую строку
+  function validateName(value) {
+    var name = String(value).trim();
+    if (name.length === 0) return 'Пожалуйста, введите имя';
+    if (!/^[A-Za-zА-Яа-яЁё\s-]+$/.test(name)) return 'Только буквы, пробел и дефис';
+    if (name.length < 2) return 'Имя — минимум 2 символа';
+    return '';
+  }
+
+  function validatePhone(value) {
+    var digits = extractPhoneDigits(value).digits;
+    if (digits.length === 0) return 'Введите телефон';
+    if (digits.length !== NATIONAL_LENGTH) return 'Номер неполный — нужно 10 цифр после +7';
+    if (digits.charAt(0) !== '9') return 'Мобильный номер начинается с 9: +7 (9…)';
+    return '';
+  }
+
+  function setError(input, show, message) {
     if (!input) return;
     input.classList.toggle('invalid', show);
     var err = form.querySelector('[data-error="' + input.name + '"]');
-    if (err) err.classList.toggle('show', show);
+    if (!err) return;
+    if (show && message) err.textContent = message;
+    err.classList.toggle('show', show);
   }
 
   if (form) {
     var nameInput = form.elements['name'];
     var phoneInput = form.elements['phone'];
+    attachPhoneMask(phoneInput);
     [nameInput, phoneInput].forEach(function (inp) {
       inp.addEventListener('input', function () { if (inp.classList.contains('invalid')) setError(inp, false); });
     });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var ok = true;
-      if (!nameInput.value.trim()) { setError(nameInput, true); ok = false; }
-      var digits = (phoneInput.value.match(/\d/g) || []).length;
-      if (digits < 10) { setError(phoneInput, true); ok = false; }
+      var nameError = validateName(nameInput.value);
+      if (nameError) { setError(nameInput, true, nameError); ok = false; }
+      var phoneError = validatePhone(phoneInput.value);
+      if (phoneError) { setError(phoneInput, true, phoneError); ok = false; }
       if (!ok) { var bad = form.querySelector('.invalid'); if (bad) bad.focus(); return; }
       successMsg.innerHTML = 'Спасибо, <b>' + escapeHtml(nameInput.value.trim()) + '</b>! Заказ на <b>' + money(total()) + '</b> принят.';
       showStep('success');
